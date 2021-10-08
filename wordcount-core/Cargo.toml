@@ -1,0 +1,11 @@
+[package]
+name = "wordcount-core"
+version = "0.1.0"
+authors = ["ewohltman"]
+edition = "2018"
+description = "Core components for a Rust implementation of `wc` for learning"
+readme = "README.md"
+repository = "https://github.com/ewohltman/wordcount"
+license = "MIT"
+
+[dependencies]
