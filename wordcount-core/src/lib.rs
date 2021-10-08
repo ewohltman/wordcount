@@ -4,6 +4,7 @@ use std::fmt;
 use std::fmt::Formatter;
 use std::io::Error;
 
+#[derive(Debug)]
 pub struct WordCount {
     pub total: usize,
     pub lines: usize,

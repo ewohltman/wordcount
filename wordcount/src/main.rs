@@ -12,7 +12,7 @@ struct ArgError {
 
 impl fmt::Display for ArgError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> std::fmt::Result {
-        writeln!(f, "{}", self.error)
+        write!(f, "{}", self.error)
     }
 }
 
