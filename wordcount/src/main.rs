@@ -46,7 +46,7 @@ fn main() -> Result<()> {
     let contents = read_file(file_name)?;
     let word_count = wordcount_core::count_words(&contents, |a, b| b.cmp(&a))?;
 
-    println!("{}", word_count);
+    print!("{}", word_count);
 
     Ok(())
 }
