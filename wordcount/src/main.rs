@@ -4,20 +4,27 @@ use std::fmt;
 use std::fs;
 use std::io::Read;
 
-#[derive(Debug)]
+type Result<T> = std::result::Result<T, Box<dyn error::Error>>;
+
 struct ArgError {
     error: String,
 }
 
 impl fmt::Display for ArgError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> std::fmt::Result {
-        writeln!(f, "Error: {}", self.error)
+        writeln!(f, "{}", self.error)
+    }
+}
+
+impl fmt::Debug for ArgError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        fmt::Display::fmt(&self, f)
     }
 }
 
 impl error::Error for ArgError {}
 
-fn read_file(file_name: &str) -> Result<String, Box<dyn error::Error>> {
+fn read_file(file_name: &str) -> Result<String> {
     let mut buffer = String::new();
     let mut f = fs::File::open(file_name)?;
 
@@ -26,7 +33,7 @@ fn read_file(file_name: &str) -> Result<String, Box<dyn error::Error>> {
     Ok(buffer)
 }
 
-fn main() -> Result<(), Box<dyn error::Error>> {
+fn main() -> Result<()> {
     let args: Vec<String> = env::args().collect();
 
     if args.len() < 2 {
