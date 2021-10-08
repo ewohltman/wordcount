@@ -1,3 +1,4 @@
+use std::cmp::Ordering;
 use std::collections::HashMap;
 use std::fmt;
 use std::fmt::Formatter;
@@ -29,7 +30,7 @@ impl WordCount {
     }
 }
 
-pub fn count_words(contents: &str) -> Result<WordCount, Error> {
+pub fn count_words(contents: &str, compare: fn(u32, u32) -> Ordering) -> Result<WordCount, Error> {
     let mut total: usize = 0;
     let lines = contents.lines().count();
     let mut unique_map: HashMap<&str, u32> = HashMap::new();
@@ -42,18 +43,17 @@ pub fn count_words(contents: &str) -> Result<WordCount, Error> {
     Ok(WordCount {
         lines,
         total,
-        unique_words: sort(unique_map),
+        unique_words: sort(unique_map, compare),
     })
 }
 
-fn sort(hash_map: HashMap<&str, u32>) -> Vec<(String, u32)> {
+fn sort(hash_map: HashMap<&str, u32>, compare: fn(u32, u32) -> Ordering) -> Vec<(String, u32)> {
     let mut vec: Vec<(String, u32)> = hash_map
         .iter()
         .map(|x| (String::from(*x.0), *x.1))
         .collect();
 
-    // TODO: accept sorting function as parameter
-    vec.sort_by(|a, b| b.1.cmp(&a.1));
+    vec.sort_by(|a, b| compare(a.1, b.1));
 
     vec
 }

@@ -15,7 +15,7 @@ fn read_file(file_name: &str) -> Result<String, Error> {
 
 fn main() -> Result<(), Error> {
     let contents = read_file(FILE_NAME)?;
-    let word_count = wordcount_core::count_words(&contents)?;
+    let word_count = wordcount_core::count_words(&contents, |a, b| b.cmp(&a))?;
 
     println!("{}", word_count);
 
