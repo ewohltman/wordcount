@@ -24,6 +24,18 @@ impl fmt::Debug for ArgError {
 
 impl error::Error for ArgError {}
 
+fn parse_file_name() -> Result<String> {
+    let args: Vec<String> = env::args().collect();
+
+    if args.len() < 2 {
+        return Err(Box::new(ArgError {
+            error: String::from("no input file"),
+        }));
+    }
+
+    Ok(args[1].clone())
+}
+
 fn read_file(file_name: &str) -> Result<String> {
     let mut buffer = String::new();
     let mut f = fs::File::open(file_name)?;
@@ -34,17 +46,9 @@ fn read_file(file_name: &str) -> Result<String> {
 }
 
 fn main() -> Result<()> {
-    let args: Vec<String> = env::args().collect();
-
-    if args.len() < 2 {
-        return Err(Box::new(ArgError {
-            error: String::from("no input file"),
-        }));
-    }
-
-    let file_name = &args[1];
-    let contents = read_file(file_name)?;
-    let word_count = wordcount_core::count_words(&contents, |a, b| b.cmp(&a))?;
+    let file_name = parse_file_name()?;
+    let contents = read_file(&file_name)?;
+    let word_count = wordcount_core::count_words(&contents, |a, b| b.cmp(&a));
 
     print!("{}", word_count);
 

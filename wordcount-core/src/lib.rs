@@ -2,7 +2,6 @@ use std::cmp::Ordering;
 use std::collections::HashMap;
 use std::fmt;
 use std::fmt::Formatter;
-use std::io::Error;
 
 #[derive(Debug)]
 pub struct WordCount {
@@ -31,7 +30,7 @@ impl WordCount {
     }
 }
 
-pub fn count_words(contents: &str, compare: fn(u32, u32) -> Ordering) -> Result<WordCount, Error> {
+pub fn count_words(contents: &str, compare: fn(u32, u32) -> Ordering) -> WordCount {
     let mut total: usize = 0;
     let lines = contents.lines().count();
     let mut unique_map: HashMap<&str, u32> = HashMap::new();
@@ -41,11 +40,11 @@ pub fn count_words(contents: &str, compare: fn(u32, u32) -> Ordering) -> Result<
         *unique_map.entry(word).or_insert(0) += 1;
     }
 
-    Ok(WordCount {
+    WordCount {
         lines,
         total,
         unique_words: sort(unique_map, compare),
-    })
+    }
 }
 
 fn sort(hash_map: HashMap<&str, u32>, compare: fn(u32, u32) -> Ordering) -> Vec<(String, u32)> {
@@ -57,4 +56,28 @@ fn sort(hash_map: HashMap<&str, u32>, compare: fn(u32, u32) -> Ordering) -> Vec<
     vec.sort_by(|a, b| compare(a.1, b.1));
 
     vec
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_count_words() {
+        const TEST: &str = "
+        test1
+        test2 test2
+        test3 test3 test3
+        ";
+
+        let word_counts = count_words(TEST, compare);
+
+        assert_eq!(word_counts.total, 6);
+        assert_eq!(word_counts.lines, 5);
+        assert_eq!(word_counts.unique_words.len(), 3);
+    }
+
+    fn compare(a: u32, b: u32) -> std::cmp::Ordering {
+        b.cmp(&a)
+    }
 }
