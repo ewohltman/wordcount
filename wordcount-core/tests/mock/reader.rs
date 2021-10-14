@@ -5,6 +5,15 @@ pub struct Reader<'a> {
     index: usize,
 }
 
+impl<'a> Reader<'a> {
+    pub fn new(contents: &str) -> Reader {
+        Reader {
+            contents: contents.as_bytes(),
+            index: 0,
+        }
+    }
+}
+
 impl<'a> io::Read for Reader<'a> {
     fn read(&mut self, buf: &mut [u8]) -> io::Result<usize> {
         if self.index == self.contents.len() {
@@ -28,14 +37,5 @@ impl<'a> io::Read for Reader<'a> {
             });
 
         Ok(len)
-    }
-}
-
-impl<'a> Reader<'a> {
-    pub fn new(contents: &str) -> Reader {
-        Reader {
-            contents: contents.as_bytes(),
-            index: 0,
-        }
     }
 }
