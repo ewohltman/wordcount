@@ -45,8 +45,8 @@ pub fn count_words(config: Config, compare: fn(u32, u32) -> Ordering) -> WordCou
     }
 
     WordCount {
-        lines,
         total,
+        lines,
         unique_words: sort(unique_map, compare),
     }
 }
