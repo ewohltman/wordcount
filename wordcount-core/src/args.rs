@@ -3,7 +3,15 @@ use std::error;
 use std::fmt;
 
 pub struct Error {
-    pub error: String,
+    error: String,
+}
+
+impl Error {
+    pub fn new(error: &str) -> Error {
+        Error {
+            error: String::from(error),
+        }
+    }
 }
 
 impl fmt::Display for Error {
@@ -24,12 +32,8 @@ pub fn parse_file_name(mut args: env::Args) -> Result<String, Error> {
     args.next();
 
     let file_name = match args.next() {
-        Some(arg) => arg,
-        None => {
-            return Err(Error {
-                error: String::from("no input file"),
-            })
-        }
+        Some(file_name) => file_name,
+        None => return Err(Error::new("no input file")),
     };
 
     Ok(file_name)
