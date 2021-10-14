@@ -1,7 +1,11 @@
+pub mod args;
+pub mod config;
+
+pub use crate::args::*;
+pub use crate::config::Config;
 use std::cmp::Ordering;
 use std::collections::HashMap;
 use std::fmt;
-use std::fmt::Formatter;
 
 #[derive(Debug)]
 pub struct WordCount {
@@ -11,7 +15,7 @@ pub struct WordCount {
 }
 
 impl fmt::Display for WordCount {
-    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         writeln!(f, "Words: {}", self.total)?;
         writeln!(f, "Lines: {}", self.lines)?;
         write!(f, "Unique words:\n{}", self.format_unique_words())
@@ -30,12 +34,12 @@ impl WordCount {
     }
 }
 
-pub fn count_words(contents: &str, compare: fn(u32, u32) -> Ordering) -> WordCount {
+pub fn count_words(config: Config, compare: fn(u32, u32) -> Ordering) -> WordCount {
     let mut total: usize = 0;
-    let lines = contents.lines().count();
+    let lines = config.contents.lines().count();
     let mut unique_map: HashMap<&str, u32> = HashMap::new();
 
-    for word in contents.split_whitespace() {
+    for word in config.contents.split_whitespace() {
         total += 1;
         *unique_map.entry(word).or_insert(0) += 1;
     }
