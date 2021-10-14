@@ -1,6 +1,7 @@
 pub const EXPECTED_TOTAL_WORDS: usize = 6;
 pub const EXPECTED_TOTAL_LINES: usize = 3;
 pub const EXPECTED_UNIQUE_WORDS: usize = 3;
+pub const EXPECTED_ERROR: &str = "test error";
 
 pub fn new_wordcount() -> wordcount_core::WordCount {
     wordcount_core::WordCount {

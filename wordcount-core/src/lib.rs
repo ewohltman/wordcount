@@ -36,10 +36,10 @@ impl WordCount {
 
 pub fn count_words(config: Config, compare: fn(u32, u32) -> Ordering) -> WordCount {
     let mut total: usize = 0;
-    let lines = config.contents.lines().count();
+    let lines = config.lines();
     let mut unique_map: HashMap<&str, u32> = HashMap::new();
 
-    for word in config.contents.split_whitespace() {
+    for word in config.content_iter() {
         total += 1;
         *unique_map.entry(word).or_insert(0) += 1;
     }
@@ -83,7 +83,7 @@ mod tests {
         assert_eq!(
             String::from(EXPECTED_FORMAT),
             word_count.format_unique_words()
-        )
+        );
     }
 
     #[test]
@@ -108,7 +108,7 @@ mod tests {
         hash_map.insert(TEST_KEY_2, TEST_VALUE_2);
         hash_map.insert(TEST_KEY_3, TEST_VALUE_3);
 
-        assert_eq!(expected_vec, sort(hash_map, compare))
+        assert_eq!(expected_vec, sort(hash_map, compare));
     }
 
     fn compare(a: u32, b: u32) -> std::cmp::Ordering {

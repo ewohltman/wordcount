@@ -1,6 +1,6 @@
-use std::env;
 use std::error;
 use std::fmt;
+use std::iter;
 
 pub struct Error {
     error: String,
@@ -28,7 +28,7 @@ impl fmt::Debug for Error {
 
 impl error::Error for Error {}
 
-pub fn parse_file_name(mut args: env::Args) -> Result<String, Error> {
+pub fn parse_file_name<T: iter::Iterator<Item = String>>(mut args: T) -> Result<String, Error> {
     args.next();
 
     let file_name = match args.next() {
