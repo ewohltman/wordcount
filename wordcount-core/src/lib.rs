@@ -108,10 +108,10 @@ mod tests {
         hash_map.insert(TEST_KEY_2, TEST_VALUE_2);
         hash_map.insert(TEST_KEY_3, TEST_VALUE_3);
 
-        assert_eq!(expected_vec, sort(hash_map, compare));
+        assert_eq!(expected_vec, sort(hash_map, sort_desc));
     }
 
-    fn compare(a: u32, b: u32) -> std::cmp::Ordering {
+    fn sort_desc(a: u32, b: u32) -> std::cmp::Ordering {
         b.cmp(&a)
     }
 }
