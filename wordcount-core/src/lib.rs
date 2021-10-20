@@ -14,15 +14,24 @@ pub struct WordCount {
     pub unique_words: Vec<(String, u32)>,
 }
 
-impl fmt::Display for WordCount {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        writeln!(f, "Words: {}", self.total)?;
-        writeln!(f, "Lines: {}", self.lines)?;
-        write!(f, "Unique words:\n{}", self.format_unique_words())
-    }
-}
-
 impl WordCount {
+    pub fn new(config: Config, compare: fn(u32, u32) -> Ordering) -> WordCount {
+        let mut total: usize = 0;
+        let lines = config.lines();
+        let mut unique_map: HashMap<&str, u32> = HashMap::new();
+
+        for word in config.content_iter() {
+            total += 1;
+            *unique_map.entry(word).or_insert(0) += 1;
+        }
+
+        WordCount {
+            total,
+            lines,
+            unique_words: sort(unique_map, compare),
+        }
+    }
+
     fn format_unique_words(&self) -> String {
         let mut buffer = String::new();
 
@@ -34,20 +43,11 @@ impl WordCount {
     }
 }
 
-pub fn count_words(config: Config, compare: fn(u32, u32) -> Ordering) -> WordCount {
-    let mut total: usize = 0;
-    let lines = config.lines();
-    let mut unique_map: HashMap<&str, u32> = HashMap::new();
-
-    for word in config.content_iter() {
-        total += 1;
-        *unique_map.entry(word).or_insert(0) += 1;
-    }
-
-    WordCount {
-        total,
-        lines,
-        unique_words: sort(unique_map, compare),
+impl fmt::Display for WordCount {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        writeln!(f, "Words: {}", self.total)?;
+        writeln!(f, "Lines: {}", self.lines)?;
+        write!(f, "Unique words:\n{}", self.format_unique_words())
     }
 }
 

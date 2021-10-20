@@ -60,21 +60,21 @@ fn test_count_words() -> Result<(), Box<dyn error::Error>> {
     const INPUT: &str = "test1\ntest2 test2\ntest3 test3 test3\n";
 
     let config = wordcount_core::Config::new(INPUT.as_bytes())?;
-    let word_counts = wordcount_core::count_words(config, sort_desc);
+    let word_count = wordcount_core::WordCount::new(config, sort_desc);
 
     assert_eq!(
         common::EXPECTED_TOTAL_WORDS,
-        word_counts.total,
+        word_count.total,
         "unexpected total words"
     );
     assert_eq!(
         common::EXPECTED_TOTAL_LINES,
-        word_counts.lines,
+        word_count.lines,
         "unexpected total lines"
     );
     assert_eq!(
         common::EXPECTED_UNIQUE_WORDS,
-        word_counts.unique_words.len(),
+        word_count.unique_words.len(),
         "unexpected unique words"
     );
 
